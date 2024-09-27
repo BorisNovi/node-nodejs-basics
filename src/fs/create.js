@@ -8,7 +8,7 @@ const create = async (path, fileContent) => {
   }
 };
 
-const path = './fresh.txt';
+const path = './src/fs/files/fresh.txt';
 const content = 'I\'m fresh and young!';
 
 await create(path, content);

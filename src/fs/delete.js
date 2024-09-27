@@ -9,6 +9,6 @@ const remove = async (path) => {
   }
 };
 
-const path = './fresh.txt';
+const path = './src/fs/files/fileToRemove.txt';
 
 await remove(path);
