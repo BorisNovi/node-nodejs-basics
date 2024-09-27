@@ -1,5 +1,14 @@
-const remove = async () => {
-    // Write your code here 
+import { rm } from 'node:fs/promises';
+
+const remove = async (path) => {
+  try {
+    await rm(path);
+  }
+  catch (error) { 
+    throw new Error('FS operation failed');
+  }
 };
 
-await remove();
+const path = './fresh.txt';
+
+await remove(path);

@@ -1,5 +1,14 @@
-const create = async () => {
-    // Write your code here 
+import { writeFile } from 'node:fs/promises';
+
+const create = async (path, fileContent) => {
+  try {
+    await writeFile(path, fileContent, { flag: 'wx'});
+  } catch (error) {
+    throw new Error('FS operation failed');
+  }
 };
 
-await create();
+const path = './fresh.txt';
+const content = 'I\'m fresh and young!';
+
+await create(path, content);
