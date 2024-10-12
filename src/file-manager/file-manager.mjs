@@ -1,8 +1,13 @@
 import * as readline from 'readline';
+import { homedir } from 'os';
+import { chdir, cwd } from 'process';
 
-
-const keys = {
+const keysEnum = {
   USERNAME: 'username',
+  EXIT: '.exit',
+  UP: 'up',
+  LS: 'ls',
+  CD: 'cd',
 };
 
 const readArgs = () => {
@@ -15,8 +20,8 @@ const readArgs = () => {
     const value = arg[1];
 
     switch (true) {
-      case key == keys.USERNAME:
-        return { key: keys.USERNAME, value };
+      case key == keysEnum.USERNAME:
+        return { key: keysEnum.USERNAME, value };
       default: 
         console.log('Wrong arg key');
         return null;
@@ -40,19 +45,19 @@ const startFileManager = (username) => {
   rl.on('line', (input) => {
     const command = input.trim();
     switch (true) {
-      case command === '.exit':
+      case command === keysEnum.EXIT:
         exitFileManager(username, rl);
         break;
 
-      case command === 'up':
+      case command === keysEnum.UP:
         console.log('go up');
         break;
 
-      case command === 'cd':
+      case command === keysEnum.CD:
         console.log('change directory');
         break;
 
-      case command === 'ls':
+      case command === keysEnum.LS:
         console.log('list');
         break;
       
@@ -75,14 +80,14 @@ const exitFileManager = (username, rl) => {
 };
 
 const printCurrentDirectory = () => {
-  console.log('current direcroyu will be here');
+  console.log(`You are currently in ${cwd()}`);
 }
 
 
 const fileManager = () => {
   const recievedArgs = readArgs();
   const username = recievedArgs?.value || 'Anon';
-
+  chdir(homedir());
   startFileManager(username);
 }
 
