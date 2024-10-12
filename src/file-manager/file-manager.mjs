@@ -72,11 +72,12 @@ const startFileManager = (username) => {
 };
 
 const exitFileManager = (username, rl) => {
-  console.log(`Thank you for using File Manager, ${username}, goodbye!`);
-  rl.close();
   rl.on('close', () => {
+    console.log(`Thank you for using File Manager, ${username}, goodbye!`);
     process.exit(0);
   });
+
+  rl.close();
 };
 
 const printCurrentDirectory = () => {
