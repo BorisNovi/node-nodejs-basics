@@ -4,6 +4,7 @@ import { chdir } from 'process';
 
 import { changeDirectory, printCurrentDirectory, goUpDirectory, listDirectory } from './directories/index.mjs';
 import { catFile, addFile, renameFile, copyFile, removeFile, moveFile } from './files/index.mjs';
+import { osInfo } from './os/index.mjs';
 
 const keysEnum = {
   USERNAME: 'username',
@@ -17,6 +18,7 @@ const keysEnum = {
   CP: 'cp',
   MV: 'mv', 
   RM: 'rm',
+  OS: 'os',
 };
 
 const readArgs = () => {
@@ -92,6 +94,10 @@ const startFileManager = (username) => {
 
       case command === keysEnum.LS:
         listDirectory();
+        break;
+
+      case command.startsWith(keysEnum.OS): 
+        osInfo(args[0]);
         break;
       
       default: 
