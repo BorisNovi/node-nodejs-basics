@@ -1,9 +1,9 @@
 import { homedir } from 'os';
 import { chdir, cwd } from 'process';
 import { existsSync } from 'fs';
+import { join } from 'path';
 
 let previousDirectory = cwd();
-
 
 export const printCurrentDirectory = () => {
   console.log(`You are currently in ${cwd()}`);
@@ -37,4 +37,15 @@ export const changeDirectory = (path) => {
   } else {
     console.error('Operation failed: path does not exist');
   }
+};
+
+export const goUpDirectory = () => {
+  const currentPath = cwd();
+  const parentPath = join(currentPath, '..');
+
+  if (currentPath !== '/') {
+    previousDirectory = currentPath;
+    chdir(parentPath);
+  }
+  printCurrentDirectory();
 };

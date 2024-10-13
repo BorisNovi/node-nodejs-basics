@@ -1,10 +1,10 @@
 import * as readline from 'readline';
 import { homedir } from 'os';
 import { join } from 'path';
-import { chdir, cwd, exit } from 'process';
-import { existsSync } from 'fs';
+import { chdir, cwd } from 'process';
+import { existsSync, readdirSync, statSync } from 'fs';
 
-import { changeDirectory, printCurrentDirectory } from './change-directory.mjs';
+import { changeDirectory, printCurrentDirectory, goUpDirectory, listDirectory } from './directories/index.mjs';
 
 const keysEnum = {
   USERNAME: 'username',
@@ -63,7 +63,7 @@ const startFileManager = (username) => {
         break;
 
       case command === keysEnum.LS:
-        console.log('list');
+        listDirectory();
         break;
       
       default: 
@@ -76,16 +76,33 @@ const startFileManager = (username) => {
   rl.on('SIGINT', () => exitFileManager(username, rl));
 };
 
+// const listDirectory = () => {
+//   try {
+//     const currentPath = cwd();
+//     const filesAndFolders = readdirSync(currentPath);
 
-const goUpDirectory = () => {
-  const currentPath = cwd();
-  const parentPath = join(currentPath, '..');
+//     const items = filesAndFolders.map((name) => {
+//       const fullPath = join(currentPath, name);
+//       const isDirectory = statSync(fullPath).isDirectory();
+//       return {
+//         name: name,
+//         type: isDirectory ? 'directory' : 'file',
+//       };
+//     });
 
-  if (currentPath !== '/') {
-    chdir(parentPath);
-  }
-  printCurrentDirectory();
-};
+//     items.sort((a, b) => {
+//       if (a.type === b.type) {
+//         return a.name.localeCompare(b.name);
+//       }
+//       return a.type === 'directory' ? -1 : 1;
+//     });
+
+//     console.table(items);
+
+//   } catch (err) {
+//     console.error('Operation failed: Unable to read directory contents');
+//   }
+// };
 
 
 const exitFileManager = (username, rl) => {
