@@ -5,6 +5,7 @@ import { chdir, cwd } from 'process';
 import { existsSync, readdirSync, statSync } from 'fs';
 
 import { changeDirectory, printCurrentDirectory, goUpDirectory, listDirectory } from './directories/index.mjs';
+import { catFile } from './files/cat-file.mjs';
 
 const keysEnum = {
   USERNAME: 'username',
@@ -12,6 +13,12 @@ const keysEnum = {
   UP: 'up',
   LS: 'ls',
   CD: 'cd',
+  CAT: 'cat',
+  ADD: 'add',
+  RN: 'rn',
+  CP: 'cp',
+  MV: 'mv', 
+  RM: 'rm',
 };
 
 const readArgs = () => {
@@ -48,6 +55,8 @@ const startFileManager = (username) => {
 
   rl.on('line', (input) => {
     const command = input.trim();
+    const path = command.split(' ')[1];
+
     switch (true) {
       case command === keysEnum.EXIT:
         exitFileManager(username, rl);
@@ -58,9 +67,32 @@ const startFileManager = (username) => {
         break;
 
       case command.startsWith(keysEnum.CD):
-        const path = command.split(' ')[1];
         changeDirectory(path);
         break;
+
+      case command.startsWith(keysEnum.CAT):
+        catFile(path);
+      break;
+
+      case command.startsWith(keysEnum.ADD):
+        console.log('add');
+      break;
+
+      case command.startsWith(keysEnum.RN):
+        console.log('rn');
+      break;
+
+      case command.startsWith(keysEnum.CP):
+        console.log('cp');
+      break;
+
+      case command.startsWith(keysEnum.MV):
+        console.log('mv');
+      break;
+
+      case command.startsWith(keysEnum.RM):
+        console.log('rm');
+      break;
 
       case command === keysEnum.LS:
         listDirectory();
@@ -75,35 +107,6 @@ const startFileManager = (username) => {
 
   rl.on('SIGINT', () => exitFileManager(username, rl));
 };
-
-// const listDirectory = () => {
-//   try {
-//     const currentPath = cwd();
-//     const filesAndFolders = readdirSync(currentPath);
-
-//     const items = filesAndFolders.map((name) => {
-//       const fullPath = join(currentPath, name);
-//       const isDirectory = statSync(fullPath).isDirectory();
-//       return {
-//         name: name,
-//         type: isDirectory ? 'directory' : 'file',
-//       };
-//     });
-
-//     items.sort((a, b) => {
-//       if (a.type === b.type) {
-//         return a.name.localeCompare(b.name);
-//       }
-//       return a.type === 'directory' ? -1 : 1;
-//     });
-
-//     console.table(items);
-
-//   } catch (err) {
-//     console.error('Operation failed: Unable to read directory contents');
-//   }
-// };
-
 
 const exitFileManager = (username, rl) => {
   rl.on('close', () => {
