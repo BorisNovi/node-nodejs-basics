@@ -1,6 +1,10 @@
 import * as readline from 'readline';
 import { homedir } from 'os';
-import { chdir, cwd } from 'process';
+import { join } from 'path';
+import { chdir, cwd, exit } from 'process';
+import { existsSync } from 'fs';
+
+import { changeDirectory, printCurrentDirectory } from './change-directory.mjs';
 
 const keysEnum = {
   USERNAME: 'username',
@@ -50,11 +54,12 @@ const startFileManager = (username) => {
         break;
 
       case command === keysEnum.UP:
-        console.log('go up');
+        goUpDirectory();
         break;
 
-      case command === keysEnum.CD:
-        console.log('change directory');
+      case command.startsWith(keysEnum.CD):
+        const path = command.split(' ')[1];
+        changeDirectory(path);
         break;
 
       case command === keysEnum.LS:
@@ -71,6 +76,18 @@ const startFileManager = (username) => {
   rl.on('SIGINT', () => exitFileManager(username, rl));
 };
 
+
+const goUpDirectory = () => {
+  const currentPath = cwd();
+  const parentPath = join(currentPath, '..');
+
+  if (currentPath !== '/') {
+    chdir(parentPath);
+  }
+  printCurrentDirectory();
+};
+
+
 const exitFileManager = (username, rl) => {
   rl.on('close', () => {
     console.log(`Thank you for using File Manager, ${username}, goodbye!`);
@@ -79,11 +96,6 @@ const exitFileManager = (username, rl) => {
 
   rl.close();
 };
-
-const printCurrentDirectory = () => {
-  console.log(`You are currently in ${cwd()}`);
-}
-
 
 const fileManager = () => {
   const recievedArgs = readArgs();
