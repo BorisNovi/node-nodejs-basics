@@ -1,11 +1,9 @@
 import * as readline from 'readline';
 import { homedir } from 'os';
-import { join } from 'path';
-import { chdir, cwd } from 'process';
-import { existsSync, readdirSync, statSync } from 'fs';
+import { chdir } from 'process';
 
 import { changeDirectory, printCurrentDirectory, goUpDirectory, listDirectory } from './directories/index.mjs';
-import { catFile } from './files/cat-file.mjs';
+import { catFile, addFile, renameFile, copyFile, removeFile, moveFile } from './files/index.mjs';
 
 const keysEnum = {
   USERNAME: 'username',
@@ -38,7 +36,6 @@ const readArgs = () => {
         return null;
     }
   }
-  
 };
 
 const startFileManager = (username) => {
@@ -53,9 +50,8 @@ const startFileManager = (username) => {
 
   rl.prompt();
 
-  rl.on('line', (input) => {
-    const command = input.trim();
-    const path = command.split(' ')[1];
+  rl.on('line', async (input) => {
+    const [command, ...args] = input.trim().split(' ');
 
     switch (true) {
       case command === keysEnum.EXIT:
@@ -67,32 +63,32 @@ const startFileManager = (username) => {
         break;
 
       case command.startsWith(keysEnum.CD):
-        changeDirectory(path);
+        changeDirectory(args[0]);
         break;
 
       case command.startsWith(keysEnum.CAT):
-        catFile(path);
-      break;
+        catFile(args[0]);
+        break;
 
       case command.startsWith(keysEnum.ADD):
-        console.log('add');
-      break;
+        await addFile(args[0]);
+        break;
 
       case command.startsWith(keysEnum.RN):
-        console.log('rn');
-      break;
+        await renameFile(args[0], args[1]);
+        break;
 
       case command.startsWith(keysEnum.CP):
-        console.log('cp');
-      break;
+        await copyFile(args[0], args[1]);
+        break;
 
       case command.startsWith(keysEnum.MV):
-        console.log('mv');
-      break;
+        await moveFile(args[0], args[1]);
+        break;
 
       case command.startsWith(keysEnum.RM):
-        console.log('rm');
-      break;
+        await removeFile(args[0]);
+        break;
 
       case command === keysEnum.LS:
         listDirectory();
