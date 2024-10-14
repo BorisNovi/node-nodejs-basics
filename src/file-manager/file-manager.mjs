@@ -6,6 +6,7 @@ import { changeDirectory, printCurrentDirectory, goUpDirectory, listDirectory } 
 import { catFile, addFile, renameFile, copyFile, removeFile, moveFile } from './files/index.mjs';
 import { osInfo } from './os/index.mjs';
 import { calcHash } from './hash/index.mjs';
+import { compressFile, decompressFile } from './archive/index.mjs';
 
 const keysEnum = {
   USERNAME: 'username',
@@ -20,7 +21,9 @@ const keysEnum = {
   MV: 'mv', 
   RM: 'rm',
   OS: 'os',
-  HASH: 'hash'
+  HASH: 'hash',
+  COMPRESS: 'compress',
+  DECOMPRESS: 'decompress'
 };
 
 const readArgs = () => {
@@ -104,6 +107,14 @@ const startFileManager = (username) => {
 
       case command.startsWith(keysEnum.HASH): 
         await calcHash(args[0]);
+        break;
+
+      case command.startsWith(keysEnum.COMPRESS):
+        await compressFile(args[0], args[1]);
+        break;
+
+      case command.startsWith(keysEnum.DECOMPRESS):
+        await decompressFile(args[0], args[1]);
         break;
       
       default: 
